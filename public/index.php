@@ -42,66 +42,70 @@ $boardgames = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 
         <!--SEARCH GROUP FOR FILTERING GAMES-->
+        <div class="search-form">
+            <form>
+                <div >
+                    
+                    <div class="form-group">
+                        <input type="Number" step="1" class="form-control" placeholder="Number of Players" name="numPlayers" value="<?php echo $numPlayers; ?>">
+                    </div>
 
-        <form>
-            <div class="input-group mb-3">
-                <input type="Number" step="1" class="form-control" placeholder="Number of Players" name="numPlayers" value="<?php echo $numPlayers; ?>">
-                
-
-                <!--TIME MODE - Approximate time is within min or max time. Max time means max time or under. Without input, 
-                    default state is Approximate. Otherwise, wage will select whatever was selected when the search button was clicked.
-                -->
-
-                <?php if($timeMode === 'max'){ ?>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="timeMode" id="approx" value="approx">
-                        <label class="form-check-label" for="approx">
-                            Approximate Time
-                        </label>
+                        <!--TIME MODE - Approximate time is within min or max time. Max time means max time or under. Without input, 
+                            default state is Approximate. Otherwise, wage will select whatever was selected when the search button was clicked.
+                        -->
+                    <div class="form-group">
+                        <?php if($timeMode === 'max'){ ?>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="timeMode" id="approx" value="approx">
+                                <label class="form-check-label" for="approx">
+                                    Approximate Time
+                                </label>
+                                
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="timeMode" id="max" value="max" checked>
+                                <label class="form-check-label" for="max">
+                                    Maximum Time
+                                </label>
+                            </div>
+                        <?php }
+                        else{?>
                         
+                        <div class="form-check">
+                                <input class="form-check-input" type="radio" name="timeMode" id="approx" value="approx" checked>
+                                <label class="form-check-label" for="approx">
+                                    Approximate Time
+                                </label>
+                                
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="timeMode" id="max" value="max" >
+                                <label class="form-check-label" for="max">
+                                    Maximum Time
+                                </label>
+                            </div>
+                        <?php } ?>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="timeMode" id="max" value="max" checked>
-                        <label class="form-check-label" for="max">
-                            Maximum Time
-                        </label>
+                        <!--END TIME MODE-->
+
+                    <div class="form-group">  
+                        <input type="Number" step="1" class="form-control" placeholder="Time (Minutes)" name="time" value="<?php echo $time; ?>">
                     </div>
-                <?php }
-                else{?>
-                
-                  <div class="form-check">
-                        <input class="form-check-input" type="radio" name="timeMode" id="approx" value="approx" checked>
-                        <label class="form-check-label" for="approx">
-                            Approximate Time
-                        </label>
-                        
+
+                    <!--INSERT LIBRARY SELECTION HERE-->
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search" name="search" value="<?php echo $search; ?>">
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="timeMode" id="max" value="max" >
-                        <label class="form-check-label" for="max">
-                            Maximum Time
-                        </label>
+
+
+
+                    <div class="form-group">
+                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
                     </div>
-                <?php } ?>
-
-                <!--END TIME MODE-->
-
-                
-                <input type="Number" step="1" class="form-control" placeholder="Approximate Amount of Time (Minutes)" name="time" value="<?php echo $time; ?>">
-
-            <!--INSERT LIBRARY SELECTION HERE-->
-
-            
-                <input type="text" class="form-control" placeholder="Search" name="search" value="<?php echo $search; ?>">
-           
-
-
-
-
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
-            </div>
-        </form>
-
+                </div>
+            </form>
+        </div>
 
         <!--DISPLAY TABLE FOR DISPLAYING THE BOARD GAMES-->
         <table class="table">
