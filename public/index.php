@@ -2,9 +2,10 @@
 
 require_once("../database.php");
 
-$numPlayers = "";
-$time="";
-$search="";
+$numPlayers = $_GET["numPlayers"] ?? '';
+$time= $_GET["time"] ?? '';
+$search= $_GET["search"] ?? '';
+$redundant= $_GET["redundant"] ?? '';
 
 $timeMode = $_GET["timeMode"] ?? '';
 
@@ -92,13 +93,30 @@ $boardgames = $statement->fetchAll(PDO::FETCH_ASSOC);
                         <input type="Number" step="1" class="form-control" placeholder="Time (Minutes)" name="time" value="<?php echo $time; ?>">
                     </div>
 
+                    <!--REDUNDANT EPANSIONS-->
+                    <?php if($redundant === "on"){ ?>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="redundant" id="redundant" checked>
+                            <label class="form-check-label" for="redundant">Redundant Expansions</label>
+                        </div>
+
+                    <?php }
+                    else{ ?>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="redundant" id="redundant">
+                            <label class="form-check-label" for="redundant">Redundant Expansions</label>
+                        </div>
+                    <?php } ?>
+
+                    <!--END REDUNDANT EXPANSIONS-->
+
                     <!--INSERT LIBRARY SELECTION HERE-->
 
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Search" name="search" value="<?php echo $search; ?>">
                     </div>
 
-
+                    
 
                     <div class="form-group">
                         <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
