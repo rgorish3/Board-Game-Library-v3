@@ -25,6 +25,19 @@
             <input type="text" class="form-control" name="name" value="<?php echo $name; ?>">
         </div>
 
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="baseOrExp-base" name="baseOrExp">
+            <label class="form-check-label" for="baseOrExp-base">
+                Base
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="baseOrExp-Exp" name="baseOrExp">
+            <label class="form-check-label" for="baseOrExp-exp">
+                Expansion
+            </label>
+        </div>
+
         <div class="mb-3">
             <label >Minimum Players</label>
             <input type="Number" step="1" class="form-control" name="minPlayers" value="<?php echo $minPlayers; ?>">
@@ -44,6 +57,33 @@
             <label >Maximum Time</label>
             <input type="Number" step="1" class="form-control" name="maxTime" value="<?php echo $maxTime; ?>">
         </div>
+
+        <div class="mb-3">
+            <label >Owner</label>
+            <input type="text" class="form-control" name="owner" value="<?php echo $owner; ?>">
+        </div>
+
+        <div class="mb-3">
+            <label >Library</label>
+            <input type="text" class="form-control" name="library" value="<?php echo $library; ?>">
+        </div>
+
+        <?php if(!$redundant){ ?>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="redundant"  id="redundant">
+                <label class="form-check-label" for="redundant">
+                    Redundant
+                </label>
+            </div>
+        <?php }
+        else{ ?>
+                    <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="redundant"  id="redundant" checked>
+                <label class="form-check-label" for="redundant">
+                    Redundant
+                </label>
+            </div>
+        <?php } ?>
 
         <div class="mb-3">
             <label > Description</label>

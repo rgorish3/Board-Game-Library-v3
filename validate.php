@@ -8,16 +8,20 @@ $maxPlayers = $_POST['maxPlayers'];
 $minTime = $_POST['minTime'];
 $maxTime = $_POST['maxTime'];
 $owner = $_POST['owner'];
-$redundant = $_POST['redundant'];
+$redundant = $_POST['redundant'] ?? '';
 $library = $_POST['library'];
 
 $image_path = '';
+
+
+
+
 
 if(!$name){
     $errors[] = 'Name is required';
 }
 
-if(!$price){
+if(!$baseOrExp){
      $errors[] = 'Designating base and/or expansion is required';
 }
 
