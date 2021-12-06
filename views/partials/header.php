@@ -11,5 +11,3 @@
     <link rel="stylesheet" href="/app.css"> 
     <title>Board Game Library</title>
 </head>
-
-<body>
