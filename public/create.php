@@ -7,6 +7,8 @@ $errors = [];
 
 $name = '';
 $baseOrExp = '';
+$baseOrExp_base = '';
+$baseOrExp_exp = '';
 $minPlayers = '';
 $maxPlayers = '';
 $minTime = '';
@@ -33,9 +35,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     if(empty($errors)){
 
         $statement = $pdo->prepare("INSERT INTO boardGames (name, baseOrExpansion, minimumPlayers, maximumPlayers, 
-            minimumTime, maximumTime, location, owner, description, isRedundant, library, has played, imageURL)
+            minimumTime, maximumTime, location, owner, description, isRedundant, library, hasPlayed, imageURL, createDate)
             VALUES(:name, :baseOrExp, :minPlayers, :maxPlayers, :minTime, :maxTime, :location, :owner, :description,
-            :redundant, :library, :played, :date)");
+            :redundant, :library, :played, :imageURL, :date)");
 
         $statement -> bindValue(':name',$name);
         $statement -> bindValue(':baseOrExp',$baseOrExp);
@@ -49,7 +51,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $statement -> bindValue(':redundant',$redundant);
         $statement -> bindValue(':library',$library);
         $statement -> bindValue(':played',$played);
-        $statement -> bindValue(':date',$date('Y-m-d H:i:s'));
+        $statement -> bindValue('imageURL',$imagePath);
+        $statement -> bindValue(':date',date('Y-m-d H:i:s'));
 
 
         $statement->execute();

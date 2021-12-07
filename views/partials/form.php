@@ -24,19 +24,47 @@
             <label >Name</label>
             <input type="text" class="form-control" name="name" value="<?php echo $name; ?>">
         </div>
+        
+        <!--BASE CHECKBOX-->
 
+        <?php if(!$baseOrExp_base) { ?>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="baseOrExp_base" name="baseOrExp_base">
+                <label class="form-check-label" for="baseOrExp-base">
+                    Base
+                </label>
+            </div>
+        <?php }
+        else { ?>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="baseOrExp_base" name="baseOrExp_base" checked>
+                <label class="form-check-label" for="baseOrExp-base">
+                    Base
+                </label>
+            </div>
+        <?php } ?>
+
+        <!--END BASE CHECKBOX-->
+
+        <!--EXPANSION CHECKBOX --> 
+
+        <?php if(!$baseOrExp_exp) { ?>
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="baseOrExp-base" name="baseOrExp">
-            <label class="form-check-label" for="baseOrExp-base">
-                Base
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="baseOrExp-Exp" name="baseOrExp">
+            <input class="form-check-input" type="checkbox" id="baseOrExp_Exp" name="baseOrExp_exp">
             <label class="form-check-label" for="baseOrExp-exp">
                 Expansion
             </label>
         </div>
+
+        <?php }
+        else { ?>
+            <input class="form-check-input" type="checkbox" id="baseOrExp_Exp" name="baseOrExp_exp" checked>
+            <label class="form-check-label" for="baseOrExp-exp">
+                Expansion
+            </label>
+        <?php } ?>
+
+        <!--END EXPANSION CHECKBOX --> 
 
         <div class="mb-3">
             <label >Minimum Players</label>
@@ -68,6 +96,14 @@
             <input type="text" class="form-control" name="library" value="<?php echo $library; ?>">
         </div>
 
+        <div class="mb-3">
+            <label >Location</label>
+            <input type="text" class="form-control" name="location" value="<?php echo $location; ?>">
+        </div>
+
+
+
+        <!--REDUNDANT CHECKBOX -->
         <?php if(!$redundant){ ?>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="redundant"  id="redundant">
@@ -84,6 +120,28 @@
                 </label>
             </div>
         <?php } ?>
+
+        <!--END REDUNDANT CHECKBOX -->
+
+        <!--PLAYED CHECKBOX -->
+        <?php if(!$played){ ?>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="played"  id="played">
+                <label class="form-check-label" for="played">
+                    Played
+                </label>
+            </div>
+        <?php }
+        else{ ?>
+                    <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="played"  id="played" checked>
+                <label class="form-check-label" for="played">
+                    Played
+                </label>
+            </div>
+        <?php } ?>
+
+        <!--END PLAYED CHECKBOX -->
 
         <div class="mb-3">
             <label > Description</label>
