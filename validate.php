@@ -2,15 +2,18 @@
 
 
 $name = $_POST['name'];
-$baseOrExp = $_POST['baseOrExp'];
+$baseOrExp_base = $_POST['baseOrExp_base'] ?? '';
+$baseOrExp_exp = $_POST['baseOrExp_exp'] ?? '';
 $minPlayers = $_POST['minPlayers'];
 $maxPlayers = $_POST['maxPlayers'];
 $minTime = $_POST['minTime'];
 $maxTime = $_POST['maxTime'];
+$location = $_POST['location'];
 $owner = $_POST['owner'];
+$description = $_POST['description'];
 $redundant = $_POST['redundant'] ?? '';
 $library = $_POST['library'];
-
+$played = $_POST['played'] ?? '';
 $image_path = '';
 
 
@@ -21,7 +24,7 @@ if(!$name){
     $errors[] = 'Name is required';
 }
 
-if(!$baseOrExp){
+if(!$baseOrExp_base && !$baseOrExp_exp){
      $errors[] = 'Designating base and/or expansion is required';
 }
 
@@ -44,10 +47,6 @@ if(!$owner){
     $errors[] = 'Owner is required';
 }
 
-if(!$redundant){
-    $errors[] = 'Designating Redundant Expansion is required';
-}
-
 if(!$library){
     $errors[] = 'Library is required';
 }
@@ -59,11 +58,11 @@ if(!is_dir(__DIR__.'/public/images')){
 }
 
 
+
 if(empty($errors)){
 
     $image = $_FILES['image'] ?? null;
     $imagePath = $boardgame['image'];
-
 
     if($image['name'] != '' && $image['tmp_name']){
         
@@ -74,4 +73,36 @@ if(empty($errors)){
         mkdir(dirname(__DIR__.'/public/'.$imagePath));
         move_uploaded_file($image['tmp_name'], __DIR__.'/public/'.$imagePath);
     }
+
+
+    //PREPARE $redundant WITH TEXT TO LOAD INTO DATABASE 
+    if($redundant){
+        $redundant = 'Yes';
+    }
+    else{
+        $redundant = 'No';
+    }
+    
+    //PREPARE $played WITH TEXT TO LOAD INTO DATABASE 
+    if($played){
+        $played = 'Yes';
+    }
+    else{
+        $played = 'No';
+    }
+
+    //PREPARE $baseOrExp WITH TEXT TO LOAD INTO DATABASE 
+    
+    if($baseOrExp_base && !$baseOrExp_exp)
+    {
+        $baseOrExp = 'Base';
+    }
+    elseif(!$baseOrExp_base && $baseOrExp_exp)
+    {
+        $baseOrExp = 'Expansion';
+    }
+    else{
+        $baseOrExp = 'Base and Expansion';
+    }
+        
 }

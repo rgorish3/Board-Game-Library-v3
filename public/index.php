@@ -12,7 +12,7 @@ $timeMode = $_GET["timeMode"] ?? '';
 
 
 //QUERY FOR POPULATING TABLE
-$statement = $pdo->prepare('SELECT * FROM boardGames ORDER BY name DESC');
+$statement = $pdo->prepare('SELECT * FROM boardGames ORDER BY name');
 $statement->execute();
 
 
@@ -144,19 +144,19 @@ $boardgames = $statement->fetchAll(PDO::FETCH_ASSOC);
             <tbody>
                 <?php foreach($boardgames as $i => $boardgame) : ?>
                     <tr>
-                        <th scope="row"><?php echo $i+1; ?>"</th>
+                        <th scope="row"><?php echo $i+1; ?></th>
 
                         <td>  
                             <img src="/<?php echo $boardgame['imageURL']; ?>" class="thumb-image">
                         </td>
 
-                        <td><?php echo $boardgame['name']; ?>"</td>
-                        <td><?php echo $boardgame['baseOrExpansion']; ?>"</td>
-                        <td><?php echo $boardgame['minimumPlayers']; ?>"</td>
-                        <td><?php echo $boardgame['maximumPlayers']; ?>"</td>
-                        <td><?php echo $boardgame['minimumTime']; ?>"</td>
-                        <td><?php echo $boardgame['maxmimumTime']; ?>"</td>
-                        <td><?php echo $boardgame['Library']; ?>"</td>
+                        <td><?php echo $boardgame['name']; ?></td>
+                        <td><?php echo $boardgame['baseOrExpansion']; ?></td>
+                        <td><?php echo $boardgame['minimumPlayers']; ?></td>
+                        <td><?php echo $boardgame['maximumPlayers']; ?></td>
+                        <td><?php echo $boardgame['minimumTime']; ?></td>
+                        <td><?php echo $boardgame['maximumTime']; ?></td>
+                        <td><?php echo $boardgame['library']; ?></td>
                     
 
                         <!--DEFINE THE ACTION BUTTONS-->
