@@ -47,79 +47,89 @@ $boardgames = $statement->fetchAll(PDO::FETCH_ASSOC);
             <form>
                 <div >
                     
-                    <div class="form-group">
-                        <input type="Number" step="1" class="form-control" placeholder="Number of Players" name="numPlayers" value="<?php echo $numPlayers; ?>">
+                    <div class="mb-3">
+                        <div class="form-group">
+                            <input type="Number" step="1" class="form-control" placeholder="Number of Players" name="numPlayers" value="<?php echo $numPlayers; ?>">
+                        </div>
                     </div>
 
-                        <!--TIME MODE - Approximate time is within min or max time. Max time means max time or under. Without input, 
-                            default state is Approximate. Otherwise, wage will select whatever was selected when the search button was clicked.
-                        -->
-                    <div class="form-group">
-                        <?php if($timeMode === 'max'){ ?>
+                    <!--TIME MODE - Approximate time is within min or max time. Max time means max time or under. Without input, 
+                        default state is Approximate. Otherwise, wage will select whatever was selected when the search button was clicked.
+                     -->
+                    <div class="mb-3">
+                        <div class="form-group">
+                            <?php if($timeMode === 'max'){ ?>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="timeMode" id="approx" value="approx">
+                                    <label class="form-check-label" for="approx">
+                                        Approximate Time
+                                    </label>
+                                    
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="timeMode" id="max" value="max" checked>
+                                    <label class="form-check-label" for="max">
+                                        Maximum Time
+                                    </label>
+                                </div>
+                            <?php }
+                            else{?>
+                            
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="timeMode" id="approx" value="approx">
-                                <label class="form-check-label" for="approx">
-                                    Approximate Time
-                                </label>
-                                
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="timeMode" id="max" value="max" checked>
-                                <label class="form-check-label" for="max">
-                                    Maximum Time
-                                </label>
-                            </div>
-                        <?php }
-                        else{?>
-                        
-                        <div class="form-check">
-                                <input class="form-check-input" type="radio" name="timeMode" id="approx" value="approx" checked>
-                                <label class="form-check-label" for="approx">
-                                    Approximate Time
-                                </label>
-                                
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="timeMode" id="max" value="max" >
-                                <label class="form-check-label" for="max">
-                                    Maximum Time
-                                </label>
-                            </div>
-                        <?php } ?>
+                                    <input class="form-check-input" type="radio" name="timeMode" id="approx" value="approx" checked>
+                                    <label class="form-check-label" for="approx">
+                                        Approximate Time
+                                    </label>
+                                    
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="timeMode" id="max" value="max" >
+                                    <label class="form-check-label" for="max">
+                                        Maximum Time
+                                    </label>
+                                </div>
+                            <?php } ?>
+                        </div>
                     </div>
-                        <!--END TIME MODE-->
+                    <!--END TIME MODE-->
 
-                    <div class="form-group">  
-                        <input type="Number" step="1" class="form-control" placeholder="Time (Minutes)" name="time" value="<?php echo $time; ?>">
+                    <div class="mb-3">
+                        <div class="form-group">  
+                            <input type="Number" step="1" class="form-control" placeholder="Time (Minutes)" name="time" value="<?php echo $time; ?>">
+                        </div>
                     </div>
 
                     <!--REDUNDANT EPANSIONS-->
-                    <?php if($redundant === "on"){ ?>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" name="redundant" id="redundant" checked>
-                            <label class="form-check-label" for="redundant">Redundant Expansions</label>
-                        </div>
+                    <div class="mb-3">
+                        <?php if($redundant === "on"){ ?>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" name="redundant" id="redundant" checked>
+                                <label class="form-check-label" for="redundant">Redundant Expansions</label>
+                            </div>
 
-                    <?php }
-                    else{ ?>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" name="redundant" id="redundant">
-                            <label class="form-check-label" for="redundant">Redundant Expansions</label>
-                        </div>
-                    <?php } ?>
+                        <?php }
+                        else{ ?>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" name="redundant" id="redundant">
+                                <label class="form-check-label" for="redundant">Redundant Expansions</label>
+                            </div>
+                        <?php } ?>
+                    </div>
 
                     <!--END REDUNDANT EXPANSIONS-->
 
                     <!--INSERT LIBRARY SELECTION HERE-->
-
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search" name="search" value="<?php echo $search; ?>">
+                    <div class="mb-3">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search" name="search" value="<?php echo $search; ?>">
+                        </div>
                     </div>
 
                     
-
-                    <div class="form-group">
-                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+                    <div class="mb-3">
+                        <div class="form-group">
+                            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+                        </div>
                     </div>
                 </div>
             </form>
