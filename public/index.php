@@ -1,5 +1,7 @@
 <?php
 
+
+
 require_once("../database.php");
 
 $numPlayers = $_GET["numPlayers"] ?? '';
@@ -12,9 +14,15 @@ $timeMode = $_GET["timeMode"] ?? '';
 $libraryPassed = $_GET["library"] ?? [];
 
 
+
+
+
 //BASE STRING FOR QUERY
 
-$queryStr = 'SELECT * FROM boardGames WHERE 1=1 ';
+$queryStr = 'SELECT * FROM boardGames WHERE 1=1 ';                      /* 'WHERE 1=1' is included to allow the WHERE clause to be present first in the query
+                                                                            as there is no way to know which if any of the later filtering options the user
+                                                                            use.
+                                                                        */
 
 
 //PLAYERS SEARCH
@@ -48,9 +56,50 @@ if($search){
     $queryStr.="AND name LIKE :search ";
 }
 
+
+//LIBRARY SEARCH
+
+$librarySearchStr = '';
+$count = 0;
+$placeholders='';
+$bindStr='';
+
+
+if(!empty($libraryPassed)){
+    
+
+    //$librarySearchStr = implode(',', $libraryPassed);
+
+    $count = count($libraryPassed);
+    $placeholders = implode(',', array_fill(0, $count, '?'));
+    $bindStr = str_repeat('s', $count);
+
+
+   // $queryStr.="AND library IN ($placeholders) ";
+}
+
+
+
+echo '<pre>';
+var_dump($libraryPassed );
+echo '</pre>';
+echo '<pre>';
+var_dump( $count);
+echo '</pre>';
+echo '<pre>';
+var_dump($placeholders );
+echo '</pre>';
+echo '<pre>';
+var_dump( $bindStr);
+echo '</pre>';
+
+
+
+
 //APPEND ORDERING
 
 $queryStr .= 'ORDER BY name';
+
 
 
 //QUERY FOR POPULATING TABLE
@@ -73,20 +122,30 @@ if($search){
     $statement->bindValue(':search',$search_WithWildcards);
 }
 
-$statement->execute();
+if(!empty($libraryPassed)){
+//    $statement->bindValue($bindStr,...$libraryPassed);
+}
 
-// echo '<pre>';
-// var_dump( $statement );
-// echo '</pre>';
+$statement->execute();
 
 
 //FETCH ARRAY OF BOARDGAMES GATHERED BY QUERY
 
 $boardgames = $statement->fetchAll(PDO::FETCH_ASSOC);
 
+/*
+echo '<pre>';W
+var_dump( $librarySearchStr );
+echo '</pre>';
+
+echo '<pre>';
+var_dump( $statement );
+echo '</pre>';
+*/
+
 
 //QUERY FOR POPULATING LIBRARIES
-$statement = $pdo->prepare('SELECT distinct Library FROM boardGames');
+$statement = $pdo->prepare('SELECT distinct Library FROM boardGames ORDER BY Library');
 $statement->execute();
 
 
@@ -226,7 +285,14 @@ $libraries = $statement->fetchAll(PDO::FETCH_ASSOC);
                         
                         <?php foreach($libraries as $i => $library) : ?>
                                
-                            <?php if(in_array($library['Library'], $libraryPassed, $strict=false)){ ?>
+                            <?php if(in_array($library['Library'], $libraryPassed, $strict=false) || empty($_GET)){ ?>  <!-- Checking to see whether the library is was passed in GET. If it
+                                                                                                                            was, displays checkbox as checked. 
+                                                                                                                            
+                                                                                                                            Will also check to see if $_GET is empty and will use checked version 
+                                                                                                                            for that as well. This is intended to have all libraries selected on 
+                                                                                                                            initial page load as n$_GET should be empty without a query string.
+                                                                                                                            However, I am a little concerned this may be dirty. Testing is required.
+                                                                                                                        -->
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="library[]" value="<?php echo $library['Library']?>"  id="<?php echo $library['Library']?>" checked>
                                     <label class="form-check-label" for="<?php echo $library['Library']?>">
@@ -301,7 +367,7 @@ $libraries = $statement->fetchAll(PDO::FETCH_ASSOC);
         
                             <form style="display: inline-block" method="post" action="delete.php">
                                 <input type="hidden" name="id" value="<?php echo $boardgame['id'] ?>">
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-sm btn-danger" onClick="return confirm('Are you sure you want to delete <?php echo $boardgame['name'];?>?')">Delete</button>
                             </form>
                         </td>
                         
