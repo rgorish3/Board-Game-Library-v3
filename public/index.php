@@ -1,5 +1,8 @@
 <?php
 
+//NOTES: 
+//INTERMITTENT ERROR WITH DELETING. CONFIRM DIALOG BOX NOT POPPING UP ON NEWER ENTRIES TO TABLE ADDED THROUGH INTERFACE.
+//  NOT SURE WHAT HAPPENS WHEN ADDED THROUGH QUERY ANALYZER. 
 
 
 require_once("../database.php");
@@ -13,7 +16,14 @@ $redundant= $_GET["redundant"] ?? '';
 $timeMode = $_GET["timeMode"] ?? '';
 $libraryPassed = $_GET["library"] ?? [];
 
-
+$positionalTotal = 0;
+$positionalCounter = 1;                                                 /*  Using positional parameters for binding values to SQL query. Because we do not know
+                                                                            how many of the filter options the user will choose at any given time, we determine
+                                                                            the total by incrementing $positionalTotal each time a segment is added to the query
+                                                                            based on how many positional parmeters are used. Then as the values are bound to the
+                                                                            positions, we increment $positionalCounter to denote which position we are binding
+                                                                            next.
+                                                                        */
 
 
 
@@ -29,7 +39,11 @@ $queryStr = 'SELECT * FROM boardGames WHERE 1=1 ';                      /* 'WHER
 
 if($numPlayers)
 {
-    $queryStr.='AND :numPlayers1 >= minimumPlayers AND :numPlayers2 <= maximumPlayers ';
+    //$queryStr.='AND :numPlayers1 >= minimumPlayers AND :numPlayers2 <= maximumPlayers ';
+
+    $queryStr.='AND ? >= minimumPlayers AND ? <= maximumPlayers ';
+
+    $positionalTotal += 2;
 }
 
 
@@ -37,10 +51,19 @@ if($numPlayers)
 if($time){
     if($timeMode === 'approx'){
         
-        $queryStr.='AND :time1 >= minimumTime AND :time2 <= maximumTime ';
+        //$queryStr.='AND :time1 >= minimumTime AND :time2 <= maximumTime ';
+        
+        $queryStr.='AND ? >= minimumTime AND ? <= maximumTime ';
+        
+        $positionalTotal += 2;
     }
     else{
-        $queryStr.='AND :time1 >= maximumTime ';
+        //$queryStr.='AND :time1 >= maximumTime ';
+        
+        $queryStr.='AND ? >= maximumTime ';
+
+        $positionalTotal++;
+    
     }
 }
 
@@ -53,7 +76,9 @@ if(!$redundant){
 //NAME SEARCH
 
 if($search){
-    $queryStr.="AND name LIKE :search ";
+    //$queryStr.="AND name LIKE :search ";
+    $queryStr.="AND name LIKE ? ";
+    $positionalTotal++;
 }
 
 
@@ -62,7 +87,9 @@ if($search){
 $librarySearchStr = '';
 $count = 0;
 $placeholders='';
-$bindStr='';
+                                                                             /*  Count is the length of $libraryPassed, $placeholders is an string of question marks
+                                                                                delimited by commas. One question mark for each item in $libraryPassed. 
+                                                                            */
 
 
 if(!empty($libraryPassed)){
@@ -72,27 +99,12 @@ if(!empty($libraryPassed)){
 
     $count = count($libraryPassed);
     $placeholders = implode(',', array_fill(0, $count, '?'));
-    $bindStr = str_repeat('s', $count);
 
 
-   // $queryStr.="AND library IN ($placeholders) ";
+    $queryStr.="AND library IN ($placeholders) ";
+
+    $positionalTotal += $count;
 }
-
-
-
-echo '<pre>';
-var_dump($libraryPassed );
-echo '</pre>';
-echo '<pre>';
-var_dump( $count);
-echo '</pre>';
-echo '<pre>';
-var_dump($placeholders );
-echo '</pre>';
-echo '<pre>';
-var_dump( $bindStr);
-echo '</pre>';
-
 
 
 
@@ -106,24 +118,46 @@ $queryStr .= 'ORDER BY name';
 $statement = $pdo->prepare($queryStr);
 
 if($numPlayers){
-    $statement->bindValue(':numPlayers1',$numPlayers);
-    $statement->bindValue(':numPlayers2',$numPlayers);
+    // $statement->bindValue(':numPlayers1',$numPlayers);
+    // $statement->bindValue(':numPlayers2',$numPlayers);
+
+    $statement->bindValue($positionalCounter, $numPlayers);
+    $positionalCounter++;
+
+    $statement->bindValue($positionalCounter,$numPlayers);
+    $positionalCounter++;
 }
 if($time){
     if($timeMode === 'approx'){
-        $statement->bindValue(':time1',$time);
-        $statement->bindValue(':time2',$time);
+        // $statement->bindValue(':time1',$time);
+        // $statement->bindValue(':time2',$time);
+
+        $statement->bindValue($positionalCounter, $time);
+        $positionalCounter++;
+
+        $statement->bindValue($positionalCounter, $time);
+        $positionalCounter++;
+
     }
     else{
-        $statement->bindValue(':time1',$time);
+        // $statement->bindValue(':time1',$time);
+
+        $statement->bindValue($positionalCounter, $time);
+        $positionalCounter++;
     }
 }
 if($search){
-    $statement->bindValue(':search',$search_WithWildcards);
+    // $statement->bindValue(':search',$search_WithWildcards);
+
+    $statement->bindValue($positionalCounter,$search_WithWildcards);
+    $positionalCounter++;
 }
 
 if(!empty($libraryPassed)){
-//    $statement->bindValue($bindStr,...$libraryPassed);
+    for($i=0; $positionalCounter<=$positionalTotal ; $i++){
+        $statement->bindValue($positionalCounter,$libraryPassed[$i]);
+        $positionalCounter++;
+    }
 }
 
 $statement->execute();
@@ -133,15 +167,6 @@ $statement->execute();
 
 $boardgames = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-/*
-echo '<pre>';W
-var_dump( $librarySearchStr );
-echo '</pre>';
-
-echo '<pre>';
-var_dump( $statement );
-echo '</pre>';
-*/
 
 
 //QUERY FOR POPULATING LIBRARIES
@@ -152,6 +177,7 @@ $statement->execute();
 //FETCH ARRAY OF LIBRARIES GATHERED BY QUERY
 
 $libraries = $statement->fetchAll(PDO::FETCH_ASSOC);
+
 
 
 
