@@ -149,7 +149,7 @@
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="redundant"  id="redundant">
                     <label class="form-check-label" for="redundant">
-                        Redundant
+                        Redundant Expansion
                     </label>
                 </div>
             <?php }
@@ -157,7 +157,7 @@
                         <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="redundant"  id="redundant" checked>
                     <label class="form-check-label" for="redundant">
-                        Redundant
+                        Redundant Expansion
                     </label>
                 </div>
             <?php } ?>
