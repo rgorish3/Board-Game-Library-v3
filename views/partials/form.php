@@ -10,8 +10,8 @@
 
     <form action="" method="post" enctype="multipart/form-data">
 
-        <?php if ($boardgame['image']){?>
-            <img src="/<?php echo $boardgame['image']?>" class="update-image">
+        <?php if ($boardgame['imageURL']){?>
+            <img src="/<?php echo $boardgame['imageURL']?>" class="update-image">
 
         <?php } ?>
 
@@ -149,7 +149,7 @@
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="redundant"  id="redundant">
                     <label class="form-check-label" for="redundant">
-                        Redundant
+                        Redundant Expansion
                     </label>
                 </div>
             <?php }
@@ -157,7 +157,7 @@
                         <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="redundant"  id="redundant" checked>
                     <label class="form-check-label" for="redundant">
-                        Redundant
+                        Redundant Expansion
                     </label>
                 </div>
             <?php } ?>

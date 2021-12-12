@@ -1,8 +1,12 @@
 <?php
 
 //NOTES: 
-//INTERMITTENT ERROR WITH DELETING. CONFIRM DIALOG BOX NOT POPPING UP ON NEWER ENTRIES TO TABLE ADDED THROUGH INTERFACE.
+//12/10/21: INTERMITTENT ERROR WITH DELETING. CONFIRM DIALOG BOX NOT POPPING UP ON NEWER ENTRIES TO TABLE ADDED THROUGH INTERFACE.
 //  NOT SURE WHAT HAPPENS WHEN ADDED THROUGH QUERY ANALYZER. 
+//
+//12/12/21: CANNOT REPLICATE THE ERROR FROM 12/10/21. ONLY DIFFERENCE IS I'M WORKING ON A DIFFERENT COMPUTER TODAY. I
+//  CANNOT SEE WHY THAT WOULD MAKE A DIFFERENCE, BUT IT SEEMS TO. NEED TO INVESTIGATE FURTHER.
+
 
 
 require_once("../database.php");
@@ -384,8 +388,8 @@ $libraries = $statement->fetchAll(PDO::FETCH_ASSOC);
                         
                         <td>
                             
-                            <a href="view.php?=<?php echo $boardgame['id'] ?>" type="button" class="btn btn-sm btn-info">View</a>
-                            <a href="update.php?=<?php echo $boardgame['id'] ?>" type="button" class="btn btn-sm btn-primary">Edit</a>
+                            <a href="view.php?id=<?php echo $boardgame['id'] ?>" type="button" class="btn btn-sm btn-info">View</a>
+                            <a href="update.php?id=<?php echo $boardgame['id'] ?>" type="button" class="btn btn-sm btn-primary">Edit</a>
                         
                             <!--Deletions should done through Post, not Get, so  using a 
                                 form instead of an anchor tag to pass hidden information
