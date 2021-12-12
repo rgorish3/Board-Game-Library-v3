@@ -51,6 +51,14 @@ if(!$library){
     $errors[] = 'Library is required';
 }
 
+if($maxTime < $minTime){
+    $errors[] = 'Minimum Time must be less than or equal to Maximum Time';
+}
+
+if($maxPlayers < $minPlayers){
+    $errors[] = 'Minimum Players must be less than or equal to Maximum Players';
+}
+
 
 
 if(!is_dir(__DIR__.'/public/images')){
@@ -62,12 +70,12 @@ if(!is_dir(__DIR__.'/public/images')){
 if(empty($errors)){
 
     $image = $_FILES['image'] ?? null;
-    $imagePath = $boardgame['image'];
+    $imagePath = $boardgame['imageURL'];
 
     if($image['name'] != '' && $image['tmp_name']){
         
-        if($boardgame['image']){
-            unlink(__DIR__.'/public/'.$boardgame['image']);  //unlink deletes the image
+        if($boardgame['imageURL']){
+            unlink(__DIR__.'/public/'.$boardgame['imageURL']);  //unlink deletes the image
         }   
         $imagePath = 'images/'.randomString(8).'/'.$image['name'];
         mkdir(dirname(__DIR__.'/public/'.$imagePath));

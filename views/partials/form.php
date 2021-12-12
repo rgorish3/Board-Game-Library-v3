@@ -10,8 +10,8 @@
 
     <form action="" method="post" enctype="multipart/form-data">
 
-        <?php if ($boardgame['image']){?>
-            <img src="/<?php echo $boardgame['image']?>" class="update-image">
+        <?php if ($boardgame['imageURL']){?>
+            <img src="/<?php echo $boardgame['imageURL']?>" class="update-image">
 
         <?php } ?>
 
