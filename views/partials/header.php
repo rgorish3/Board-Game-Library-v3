@@ -10,4 +10,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="/app.css"> 
     <title>Board Game Library</title>
+
+    <script type="text/javascript">
+        function confirm_delete(game){
+            return confirm('Are you sure you want to delete ' + game + '?');
+        }
+    </script>
+
 </head>

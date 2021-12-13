@@ -1,13 +1,5 @@
 <?php
 
-//NOTES: 
-//12/10/21: INTERMITTENT ERROR WITH DELETING. CONFIRM DIALOG BOX NOT POPPING UP ON NEWER ENTRIES TO TABLE ADDED THROUGH INTERFACE.
-//  NOT SURE WHAT HAPPENS WHEN ADDED THROUGH QUERY ANALYZER. 
-//
-//12/12/21: CANNOT REPLICATE THE ERROR FROM 12/10/21. ONLY DIFFERENCE IS I'M WORKING ON A DIFFERENT COMPUTER TODAY. I
-//  CANNOT SEE WHY THAT WOULD MAKE A DIFFERENCE, BUT IT SEEMS TO. NEED TO INVESTIGATE FURTHER.
-
-
 
 require_once('../search.php');
 
@@ -80,10 +72,13 @@ require_once('../search.php');
                             <!--Deletions should done through Post, not Get, so  using a 
                                 form instead of an anchor tag to pass hidden information
                                 to be used in a post request-->
-        
+                            
+
+                            <?php $nameWithoutQuotes = str_replace(array('"',"'"), "",$boardgame['name']);?>
+
                             <form style="display: inline-block" method="post" action="delete.php">
                                 <input type="hidden" name="id" value="<?php echo $boardgame['id'] ?>">
-                                <button type="submit" class="btn btn-sm btn-danger mb-2" onClick="return confirm('Are you sure you want to delete <?php echo $boardgame['name'];?>?')">Delete</button>
+                                <button type="submit" class="btn btn-sm btn-danger mb-2" onclick="return confirm_delete('<?php echo $nameWithoutQuotes ?>')">Delete</button>
                             </form>
                         </td>
                         
@@ -99,5 +94,7 @@ require_once('../search.php');
 
 
     </div>
+
+
 </body>
 </html>
