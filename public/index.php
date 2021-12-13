@@ -21,7 +21,6 @@ require_once('../search.php');
 <body>
     <div class="main">
         <h1>Board Game Library</h1> 
-Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perferendis, reiciendis similique facilis quaerat consectetur culpa nobis obcaecati ipsam facere optio! Sint, reiciendis neque et explicabo architecto iusto ab optio animi eos error facere numquam voluptatibus tenetur dicta doloribus, minima suscipit quas, sunt dolorem provident fugiat ea hic. Natus, minima atque provident odio aperiam reprehenderit doloremque nemo voluptate magnam harum accusantium laudantium aliquid expedita. Voluptatibus, necessitatibus id laboriosam non harum atque tenetur? Similique deleniti, vitae fuga iure libero eos, impedit nostrum non aliquam excepturi a harum asperiores minus modi aliquid recusandae optio architecto sapiente delectus cumque voluptatem! Obcaecati pariatur repellendus nam!
 
 
         <!--ADD BUTTON. LINKS TO ADD GAME PAGE-->
