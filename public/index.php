@@ -22,6 +22,13 @@ require_once('../search.php');
         </p>
 
 
+        <!--RESET BUTTON-->
+
+        <p>
+            <a href="index.php" class="btn btn-secondary">Reset</a>
+        </p>
+
+
         <!-- ADD Search Form. -->
 
         <?php include_once('../views/partials/search_form.php'); ?>
@@ -74,7 +81,10 @@ require_once('../search.php');
                                 to be used in a post request-->
                             
 
-                            <?php $nameWithoutQuotes = str_replace(array('"',"'"), "",$boardgame['name']);?>
+                            <?php $nameWithoutQuotes = str_replace(array('"',"'"), "",$boardgame['name']);      //removing quotes and single quotes so as to not close quotes in
+                                                                                                                //  confirm_delete in delete button below.
+                            
+                            ?>            
 
                             <form style="display: inline-block" method="post" action="delete.php">
                                 <input type="hidden" name="id" value="<?php echo $boardgame['id'] ?>">
