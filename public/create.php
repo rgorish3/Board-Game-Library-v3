@@ -71,7 +71,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
         <h1>Create New Game</h1>
 
-        <?php include_once "../views/partials/form.php" ?>
+        <p> 
+            <a href="bggadd.php" class="btn btn-success">Search BoardGameGeek for Game</a>
+        </p>
+
+        <?php include_once "../views/partials/form.php" ?>6
     </div> 
 </body>
 
