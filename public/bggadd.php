@@ -1,19 +1,46 @@
 <?php
 
 $name = $_GET["name"] ?? null;
-$games = [];
-
 
 $name = htmlspecialchars($name);
 $name = str_replace(' ','%20', $name);
 
 if ($name) {
 
-    $searchURL = 'https://www.boardgamegeek.com/xmlapi/search?search=' . $name;
-    $resource = curl_init();
+    $gameSearchURL = 'https://www.boardgamegeek.com/xmlapi/search?search=' ;            //Base URL for BoardGameGeek's search function which allows
+                                                                                        //  searching for specific game names. This will provide the 
+                                                                                        //  short form of game information including objectid.
+    
+    $objectSearchURL = 'https://www.boardgamegeek.com/xmlapi/boardgame/';               //Base URL for BoardGameGeek's specific boardgame lookup. Look up
+                                                                                        //  boardgames based on specific objectid. The objectid can be
+                                                                                        //  obtained using the search function. The call can accommodate
+                                                                                        //  one or multiple comma-delimited objectids. This will return the
+                                                                                        //  long form of game information.
 
+    /*
+    Using the terms SEARCH and SEARCHED in variables to refer to the 
+    data gathered from the search function. Using the terms OBJECT 
+    or OBJECTID in variables to refer to the data gathered from the
+    boardgame search. Exception is $objectidArray which is an array
+    of objectids as gathered in the pull from search.
+    */
+
+    // INITIALIZE ARRAY FOR STORING OBJECTIDS
+    $objectidArray = [];
+
+    
+    // CONNECT TO GAMESEARCHURL TO SEARCH FOR GAME
+
+    /* 
+    Once the XML is pulled, it is translated into simplexml, then translated to json, then
+    decoded into an array. I do not know if this is the most efficent way to do this, but
+    it was the only way I could find to put XML into an array format.
+    */
+
+    $resource = curl_init();
+    
     curl_setopt_array($resource, [
-        CURLOPT_URL => $searchURL,
+        CURLOPT_URL => $gameSearchURL. $name,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_HTTPHEADER => ['content-type: application/xml']
@@ -21,7 +48,46 @@ if ($name) {
 
     $result = curl_exec($resource);
 
-    $games = new SimpleXMLElement($result);
+    $xml = simplexml_load_string($result);
+    $json = json_encode($xml);
+    $gameSearchResult = json_decode($json, TRUE);
+
+    // END CONNECT TO SEARCH URL
+    
+    
+
+    $bggSearchedBoardGames = $gameSearchResult['boardgame'] ?? [];                  //Set to the inner 'boardgame' array for easier access
+
+
+    // POPULATE OBJECTIDARRAY
+
+    for($i=0; $i< count($bggSearchedBoardGames);$i++ ){
+        $objectidArray[] = $gameSearchResult['boardgame'][$i]['@attributes']['objectid'];
+    }
+
+    // END POPULATE OBJECTIDARRAY
+
+
+    // CONNECT TO OBJECTSEARCHURL TO SEARCH FOR OBJECTIDS
+
+    curl_setopt_array($resource, [
+        CURLOPT_URL => $objectSearchURL. implode(',',$objectidArray),
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => ['content-type: application/xml']
+    ]);
+
+    $result = curl_exec($resource);
+
+    $xml = simplexml_load_string($result);
+    $json = json_encode($xml);
+    $objectSearchResult = json_decode($json, TRUE);
+
+    // END CONNECT TO OBJECTSEARCHURL
+
+    $bggObjectBoardGames = $objectSearchResult['boardgame'] ?? [];                  //Set to the inner 'boardgame array for easier access
+
+    
 
 }
 
@@ -60,12 +126,20 @@ if ($name) {
         <!--END SEARCH BAR-->
 
         <?php if ($name) {
-            if (empty($games)) { ?>
-                <h3>Could not find games with the title <?php echo $name ?></h3>
+            if (empty($bggSearchedBoardGames)) { ?>
+                <h4>Could not find games with the title <?php echo $name ?></h4>
             <?php } else {
-                echo '<pre>';
-                echo var_dump($games);
-                echo '</pre>';
+                for($i=0;$i<count($bggSearchedBoardGames);$i++){
+                    
+                    ?>
+                    <img src="<?php echo $bggObjectBoardGames[$i]['thumbnail']?>" class="update-image">
+                    
+                    <p>
+                        <strong><?php echo $bggSearchedBoardGames[$i]['name'] ?> </strong> </br>
+                        <?php echo $bggSearchedBoardGames[$i]['yearpublished'].'</br>';
+                        echo $bggObjectBoardGames[$i]['minplayers'].'-'.$bggObjectBoardGames[$i]['maxplayers'].' players'.'</br>';?>
+                        <hr/>
+                <?php }
             } ?>
         <?php } ?>
     </div>
