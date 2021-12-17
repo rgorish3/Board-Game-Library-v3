@@ -20,9 +20,10 @@ $description ='';
 $redundant = '';
 $library = '';
 $played = '';
+$url = $_POST['URL'] ?? '';
 
 
-$boardgame = ['imageURL' => ''];
+$boardgame = ['imageURL' => $url];
 
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -75,7 +76,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             <a href="bggadd.php" class="btn btn-success">Search BoardGameGeek for Game</a>
         </p>
 
-        <?php include_once "../views/partials/form.php" ?>6
+        <?php include_once "../views/partials/form.php" ?>
     </div> 
 </body>
 

@@ -3,19 +3,19 @@
 $name = $_GET["name"] ?? null;
 
 $name = htmlspecialchars($name);
-$name = str_replace(' ','%20', $name);
+$name = str_replace(' ', '%20', $name);
 
 if ($name) {
 
-    $gameSearchURL = 'https://www.boardgamegeek.com/xmlapi/search?search=' ;            //Base URL for BoardGameGeek's search function which allows
-                                                                                        //  searching for specific game names. This will provide the 
-                                                                                        //  short form of game information including objectid.
-    
+    $gameSearchURL = 'https://www.boardgamegeek.com/xmlapi/search?search=';            //Base URL for BoardGameGeek's search function which allows
+    //  searching for specific game names. This will provide the 
+    //  short form of game information including objectid.
+
     $objectSearchURL = 'https://www.boardgamegeek.com/xmlapi/boardgame/';               //Base URL for BoardGameGeek's specific boardgame lookup. Look up
-                                                                                        //  boardgames based on specific objectid. The objectid can be
-                                                                                        //  obtained using the search function. The call can accommodate
-                                                                                        //  one or multiple comma-delimited objectids. This will return the
-                                                                                        //  long form of game information.
+    //  boardgames based on specific objectid. The objectid can be
+    //  obtained using the search function. The call can accommodate
+    //  one or multiple comma-delimited objectids. This will return the
+    //  long form of game information.
 
     /*
     Using the terms SEARCH and SEARCHED in variables to refer to the 
@@ -28,7 +28,7 @@ if ($name) {
     // INITIALIZE ARRAY FOR STORING OBJECTIDS
     $objectidArray = [];
 
-    
+
     // CONNECT TO GAMESEARCHURL TO SEARCH FOR GAME
 
     /* 
@@ -38,9 +38,9 @@ if ($name) {
     */
 
     $resource = curl_init();
-    
+
     curl_setopt_array($resource, [
-        CURLOPT_URL => $gameSearchURL. $name,
+        CURLOPT_URL => $gameSearchURL . $name,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_HTTPHEADER => ['content-type: application/xml']
@@ -53,15 +53,15 @@ if ($name) {
     $gameSearchResult = json_decode($json, TRUE);
 
     // END CONNECT TO SEARCH URL
-    
-    
+
+
 
     $bggSearchedBoardGames = $gameSearchResult['boardgame'] ?? [];                  //Set to the inner 'boardgame' array for easier access
 
 
     // POPULATE OBJECTIDARRAY
 
-    for($i=0; $i< count($bggSearchedBoardGames);$i++ ){
+    for ($i = 0; $i < count($bggSearchedBoardGames); $i++) {
         $objectidArray[] = $gameSearchResult['boardgame'][$i]['@attributes']['objectid'];
     }
 
@@ -71,7 +71,7 @@ if ($name) {
     // CONNECT TO OBJECTSEARCHURL TO SEARCH FOR OBJECTIDS
 
     curl_setopt_array($resource, [
-        CURLOPT_URL => $objectSearchURL. implode(',',$objectidArray),
+        CURLOPT_URL => $objectSearchURL . implode(',', $objectidArray),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_HTTPHEADER => ['content-type: application/xml']
@@ -87,7 +87,7 @@ if ($name) {
 
     $bggObjectBoardGames = $objectSearchResult['boardgame'] ?? [];                  //Set to the inner 'boardgame array for easier access
 
-    
+
 
 }
 
@@ -128,18 +128,37 @@ if ($name) {
         <?php if ($name) {
             if (empty($bggSearchedBoardGames)) { ?>
                 <h4>Could not find games with the title <?php echo $name ?></h4>
-            <?php } else {
-                for($i=0;$i<count($bggSearchedBoardGames);$i++){
-                    
-                    ?>
-                    <img src="<?php echo $bggObjectBoardGames[$i]['thumbnail']?>" class="update-image">
-                    
-                    <p>
-                        <strong><?php echo $bggSearchedBoardGames[$i]['name'] ?> </strong> </br>
-                        <?php echo $bggSearchedBoardGames[$i]['yearpublished'].'</br>';
-                        echo $bggObjectBoardGames[$i]['minplayers'].'-'.$bggObjectBoardGames[$i]['maxplayers'].' players'.'</br>';?>
-                        <hr/>
-                <?php }
+                <?php } else {
+                for ($i = 0; $i < count($bggSearchedBoardGames); $i++) {
+
+                ?>
+                    <div class="mb-2 border border-1 border-dark">
+
+                        <div class="row mb-1 mt-1 ms-1">
+                            <div class="col-md-4 col-sm-4">
+                                <img src="<?php echo $bggObjectBoardGames[$i]['thumbnail'] ?>" class="update-image">
+                            </div>
+                            <div class="col-md-7 col-sm-7">
+                                <p>
+                                    <strong><?php echo $bggSearchedBoardGames[$i]['name'] ?> </strong> </br>
+                                    <?php echo $bggSearchedBoardGames[$i]['yearpublished'] . '</br>';
+                                    echo $bggObjectBoardGames[$i]['minplayers'] . '-' . $bggObjectBoardGames[$i]['maxplayers'] . ' players' . '</br>'; ?>
+                                </p>
+                            </div>
+                            <div class="col-md-1 col-sm-7">
+                                <form style="display: inline-block" method="post" action="create.php">
+                                    <input type="hidden" name="name" value="<?php echo $bggSearchedBoardGames[$i]['name']?>">
+                                    <input type="hidden" name="minPlayers" value="<?php echo $bggObjectBoardGames[$i]['minplayers'] ?>">
+                                    <input type="hidden" name="maxPlayers" value="<?php echo $bggObjectBoardGames[$i]['maxplayers'] ?>">
+                                    <input type="hidden" name="minTime" value="<?php echo $bggObjectBoardGames[$i]['minplaytime'] ?>">
+                                    <input type="hidden" name="maxTime" value="<?php echo $bggObjectBoardGames[$i]['maxplaytime'] ?>">
+                                    <input type="hidden" name="URL" value="<?php echo $bggObjectBoardGames[$i]['thumbnail'] ?>">
+                                    <button type="submit" class="btn btn-lg btn-success">Select</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+            <?php }
             } ?>
         <?php } ?>
     </div>
