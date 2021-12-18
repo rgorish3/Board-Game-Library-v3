@@ -57,7 +57,7 @@ require_once('../search.php');
                         <th scope="row"><?php echo $i+1; ?></th>
 
                         <td>  
-                            <img src="/<?php echo $boardgame['imageURL']; ?>" class="thumb-image">
+                            <img src="<?php echo $boardgame['imageURL']; ?>" class="thumb-image">
                         </td>
 
                         <td><?php echo $boardgame['name']; ?></td>

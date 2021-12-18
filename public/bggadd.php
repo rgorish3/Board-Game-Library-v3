@@ -5,6 +5,8 @@ $name = $_GET["name"] ?? null;
 $name = htmlspecialchars($name);
 $name = str_replace(' ', '%20', $name);
 
+$exact = $_GET["exact"] ?? 0;
+
 if ($name) {
 
     $gameSearchURL = 'https://www.boardgamegeek.com/xmlapi/search?search=';            //Base URL for BoardGameGeek's search function which allows
@@ -40,7 +42,7 @@ if ($name) {
     $resource = curl_init();
 
     curl_setopt_array($resource, [
-        CURLOPT_URL => $gameSearchURL . $name,
+        CURLOPT_URL => $gameSearchURL . $name,// . '&exact='. $exact,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_HTTPHEADER => ['content-type: application/xml']
@@ -51,6 +53,11 @@ if ($name) {
     $xml = simplexml_load_string($result);
     $json = json_encode($xml);
     $gameSearchResult = json_decode($json, TRUE);
+
+
+
+    echo $gameSearchURL . $name . '&exact='. $exact;
+
 
     // END CONNECT TO SEARCH URL
 
@@ -76,6 +83,8 @@ if ($name) {
         CURLOPT_POST => true,
         CURLOPT_HTTPHEADER => ['content-type: application/xml']
     ]);
+
+    echo "<br/>".$objectSearchURL . implode(',', $objectidArray);
 
     $result = curl_exec($resource);
 
@@ -108,9 +117,22 @@ if ($name) {
             <div class="row">
                 <div class="col-md-4 col-sm-4">
                     <div class="mb-3">
-                        <div class="form-group">
+                        <div class="form-group mb-1">
                             <input type="text" class="form-control" id="name" name="name" placeholder="Game Title" value="<?php echo $name ?>">
                         </div>
+                        <?php if(!$exact){ ?>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" name="exact" value='1' id="exact">
+                                <label class="form-check-label" for="exact">Exact Text Search</label>
+                            </div>
+                        <?php }
+                        else{ ?>
+                            <div class="form-check form-switch ms-1">
+                                <input class="form-check-input" type="checkbox" role="switch" name="exact" value='1' id="exact" checked>
+                                <label class="form-check-label" for="exact">Exact Text Search</label>
+                            </div>
+
+                        <?php } ?>
                     </div>
                 </div>
                 <div class="col-md-1 col-sm-1">
@@ -152,7 +174,9 @@ if ($name) {
                                     <input type="hidden" name="maxPlayers" value="<?php echo $bggObjectBoardGames[$i]['maxplayers'] ?>">
                                     <input type="hidden" name="minTime" value="<?php echo $bggObjectBoardGames[$i]['minplaytime'] ?>">
                                     <input type="hidden" name="maxTime" value="<?php echo $bggObjectBoardGames[$i]['maxplaytime'] ?>">
-                                    <input type="hidden" name="URL" value="<?php echo $bggObjectBoardGames[$i]['thumbnail'] ?>">
+                                    <input type="hidden" name="imageURL" value="<?php echo $bggObjectBoardGames[$i]['thumbnail'] ?>">
+                                    <input type="hidden" name="description" value="<?php echo $bggObjectBoardGames[$i]['description'] ?>">
+                                    <input type="hidden" name="frombggadd" value="true">
                                     <button type="submit" class="btn btn-lg btn-success">Select</button>
                                 </form>
                             </div>
