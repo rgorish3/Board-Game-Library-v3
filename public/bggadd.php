@@ -2,22 +2,22 @@
 
 $name = $_GET["name"] ?? null;
 
-$name = htmlspecialchars($name);
-$name = str_replace(' ', '%20', $name);
+$nameReplace = htmlspecialchars($name);
+$nameReplace = str_replace(' ', '%20', $nameReplace);
 
 $exact = $_GET["exact"] ?? 0;
 
 if ($name) {
 
-    $gameSearchURL = 'https://www.boardgamegeek.com/xmlapi/search?search=';            //Base URL for BoardGameGeek's search function which allows
-    //  searching for specific game names. This will provide the 
-    //  short form of game information including objectid.
+    $gameSearchURL = 'https://www.boardgamegeek.com/xmlapi/search?search=';             //Base URL for BoardGameGeek's search function which allows
+                                                                                        //  searching for specific game names. This will provide the 
+                                                                                        //  short form of game information including objectid.
 
     $objectSearchURL = 'https://www.boardgamegeek.com/xmlapi/boardgame/';               //Base URL for BoardGameGeek's specific boardgame lookup. Look up
-    //  boardgames based on specific objectid. The objectid can be
-    //  obtained using the search function. The call can accommodate
-    //  one or multiple comma-delimited objectids. This will return the
-    //  long form of game information.
+                                                                                        //  boardgames based on specific objectid. The objectid can be
+                                                                                        //  obtained using the search function. The call can accommodate
+                                                                                        //  one or multiple comma-delimited objectids. This will return the
+                                                                                        //  long form of game information.
 
     /*
     Using the terms SEARCH and SEARCHED in variables to refer to the 
@@ -42,7 +42,7 @@ if ($name) {
     $resource = curl_init();
 
     curl_setopt_array($resource, [
-        CURLOPT_URL => $gameSearchURL . $name,// . '&exact='. $exact,
+        CURLOPT_URL => $gameSearchURL . $nameReplace . '&exact='. $exact,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_HTTPHEADER => ['content-type: application/xml']
@@ -56,47 +56,73 @@ if ($name) {
 
 
 
-    echo $gameSearchURL . $name . '&exact='. $exact;
-
-
     // END CONNECT TO SEARCH URL
 
 
 
-    $bggSearchedBoardGames = $gameSearchResult['boardgame'] ?? [];                  //Set to the inner 'boardgame' array for easier access
+    $bggSearchedBoardGames=[];                                                                          
+
+
+    if(!empty($gameSearchResult['boardgame'])){                                                         //If there is only one game, $gameSearchResult['boardgame'] will
+                                                                                                        //  be an associative array. If there is more than one game, it will
+                                                                                                        //  be an indexed array of associative arrays. 
+                                                                                                        //  Using is_int on the first index of array_keys
+                                                                                                        //  to determine if it is an associative or indexed array. According to
+                                                                                                        //  the format of the returned xml, the array will never have a key of an
+                                                                                                        //  integer if it is not an indexed array so this is safe. If it is an
+                                                                                                        //  indexed array, set $bggSearchedBoardGames to be equal to it. If it is
+                                                                                                        //  an associative array, push the associative array as the first element
+                                                                                                        //  of $bggSearchedBoardGames to make it an indexed array of associative
+                                                                                                        //  arrays. Check to see if $gameSearchResult['boardgame'] is empty first
+                                                                                                        //  as is_int requires a non-empty array to function.
+        if(is_int(array_keys($gameSearchResult['boardgame'])[0])){    
+            $bggSearchedBoardGames = $gameSearchResult['boardgame'];                  
+        }
+        else{
+            $bggSearchedBoardGames[] = $gameSearchResult['boardgame'];                
+        }
+    }
 
 
     // POPULATE OBJECTIDARRAY
 
     for ($i = 0; $i < count($bggSearchedBoardGames); $i++) {
-        $objectidArray[] = $gameSearchResult['boardgame'][$i]['@attributes']['objectid'];
+        $objectidArray[] = $bggSearchedBoardGames[$i]['@attributes']['objectid'];
     }
 
     // END POPULATE OBJECTIDARRAY
 
 
     // CONNECT TO OBJECTSEARCHURL TO SEARCH FOR OBJECTIDS
+    if(!empty($objectidArray)) {                                                                    //Only do this if $objectidArray is not empty because objectSearchURL
+                                                                                                    //  404s if it does not have an object to search for.
+        curl_setopt_array($resource, [
+            CURLOPT_URL => $objectSearchURL . implode(',', $objectidArray),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => ['content-type: application/xml']
+        ]);
 
-    curl_setopt_array($resource, [
-        CURLOPT_URL => $objectSearchURL . implode(',', $objectidArray),
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_HTTPHEADER => ['content-type: application/xml']
-    ]);
+        $result = curl_exec($resource);
 
-    echo "<br/>".$objectSearchURL . implode(',', $objectidArray);
-
-    $result = curl_exec($resource);
-
-    $xml = simplexml_load_string($result);
-    $json = json_encode($xml);
-    $objectSearchResult = json_decode($json, TRUE);
+        $xml = simplexml_load_string($result);
+        $json = json_encode($xml);
+        $objectSearchResult = json_decode($json, TRUE);
+    
 
     // END CONNECT TO OBJECTSEARCHURL
 
-    $bggObjectBoardGames = $objectSearchResult['boardgame'] ?? [];                  //Set to the inner 'boardgame array for easier access
 
 
+        if(is_int(array_keys($objectSearchResult['boardgame'])[0])){                                //See above regarding how $bggSearchedBoardGames was set. Setting $bggObjectBoardGames
+                                                                                                    //  the same way.
+            $bggObjectBoardGames = $objectSearchResult['boardgame'] ?? [];                         
+        }
+        else
+        {
+            $bggObjectBoardGames[] = $objectSearchResult['boardgame'] ?? [];
+        }
+    }
 
 }
 
@@ -108,7 +134,9 @@ if ($name) {
 
 <body>
     <div class="main">
-
+          <p>
+            <a href="create.php" class="btn btn-secondary">Go Back to Add Game</a>
+        </p>
 
         <h1>Search BoardGameGeek For Game</h1>
 
@@ -157,17 +185,17 @@ if ($name) {
                     <div class="mb-2 border border-1 border-dark">
 
                         <div class="row mb-1 mt-1 ms-1">
-                            <div class="col-md-4 col-sm-4">
+                            <div class="col-md-4">
                                 <img src="<?php echo $bggObjectBoardGames[$i]['thumbnail'] ?>" class="update-image">
                             </div>
-                            <div class="col-md-7 col-sm-7">
+                            <div class="col-md-6">
                                 <p>
                                     <strong><?php echo $bggSearchedBoardGames[$i]['name'] ?> </strong> </br>
                                     <?php echo $bggSearchedBoardGames[$i]['yearpublished'] . '</br>';
                                     echo $bggObjectBoardGames[$i]['minplayers'] . '-' . $bggObjectBoardGames[$i]['maxplayers'] . ' players' . '</br>'; ?>
                                 </p>
                             </div>
-                            <div class="col-md-1 col-sm-7">
+                            <div class="col-md-1">
                                 <form style="display: inline-block" method="post" action="create.php">
                                     <input type="hidden" name="name" value="<?php echo $bggSearchedBoardGames[$i]['name']?>">
                                     <input type="hidden" name="minPlayers" value="<?php echo $bggObjectBoardGames[$i]['minplayers'] ?>">
@@ -175,9 +203,9 @@ if ($name) {
                                     <input type="hidden" name="minTime" value="<?php echo $bggObjectBoardGames[$i]['minplaytime'] ?>">
                                     <input type="hidden" name="maxTime" value="<?php echo $bggObjectBoardGames[$i]['maxplaytime'] ?>">
                                     <input type="hidden" name="imageURL" value="<?php echo $bggObjectBoardGames[$i]['thumbnail'] ?>">
-                                    <input type="hidden" name="description" value="<?php echo $bggObjectBoardGames[$i]['description'] ?>">
+                                    <input type="hidden" name="description" value="<?php echo strip_tags($bggObjectBoardGames[$i]['description'],'<br>') ?>">
                                     <input type="hidden" name="frombggadd" value="true">
-                                    <button type="submit" class="btn btn-lg btn-success">Select</button>
+                                    <button type="submit" class="btn btn-lg btn-success mt-1">Select</button>
                                 </form>
                             </div>
                         </div>
