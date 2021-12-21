@@ -11,7 +11,7 @@
     <form action="" method="post" enctype="multipart/form-data">
 
         <?php if ($boardgame['imageURL']){?>
-            <img src="/<?php echo $boardgame['imageURL']?>" class="update-image">
+            <img src="<?php echo $boardgame['imageURL']?>" class="update-image">
 
         <?php } ?>
 
@@ -35,7 +35,7 @@
             <?php if(!$baseOrExp_base) { ?>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="baseOrExp_base" name="baseOrExp_base">
-                    <label class="form-check-label" for="baseOrExp-base">
+                    <label class="form-check-label" for="baseOrExp_base">
                         Base
                     </label>
                 </div>
@@ -43,7 +43,7 @@
             else { ?>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="baseOrExp_base" name="baseOrExp_base" checked>
-                    <label class="form-check-label" for="baseOrExp-base">
+                    <label class="form-check-label" for="baseOrExp_base">
                         Base
                     </label>
                 </div>
@@ -55,16 +55,16 @@
 
             <?php if(!$baseOrExp_exp) { ?>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="baseOrExp_Exp" name="baseOrExp_exp">
-                <label class="form-check-label" for="baseOrExp-exp">
+                <input class="form-check-input" type="checkbox" id="baseOrExp_exp" name="baseOrExp_exp">
+                <label class="form-check-label" for="baseOrExp_exp">
                     Expansion
                 </label>
             </div>
 
             <?php }
             else { ?>
-                <input class="form-check-input" type="checkbox" id="baseOrExp_Exp" name="baseOrExp_exp" checked>
-                <label class="form-check-label" for="baseOrExp-exp">
+                <input class="form-check-input" type="checkbox" id="baseOrExp_exp" name="baseOrExp_exp" checked>
+                <label class="form-check-label" for="baseOrExp_exp">
                     Expansion
                 </label>
             <?php } ?>
@@ -190,7 +190,8 @@
             <label > Description</label>
             <textarea class="form-control" name="description"><?php echo $description; ?></textarea>
         </div>
-
+        
+        <input type="hidden" name="imageURL" value="<?php echo $url ?>">
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
