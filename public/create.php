@@ -38,6 +38,38 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $maxTime = $_POST['maxTime'];
         $description = str_replace("<br/>","\n",$_POST['description']);
 
+        if($minTime === $maxTime){
+            if($minTime<=10){
+                $mintime=1;
+                $maxTime=10;
+            }
+            else if($minTime<=20){
+                $minTime-=5;
+                $maxTime+=5;
+            }
+            else if($minTime<=30){
+                $minTime-=10;
+                $maxTime+=10;
+            }
+            else if($minTime<=60){
+                $minTime-=15;
+                $maxTime+=15;
+            }
+            else if($minTime<=90){
+                $minTime-=20;
+                $maxTime+=20;
+            }
+            else if($minTime<=150){
+                $minTime-=30;
+                $maxTime+=30;
+            }
+            else{
+                $minTime-=40;
+                $maxTime+=40;
+            }
+        }
+
+
     }
     else{
         require_once('../validate.php');
