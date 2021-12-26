@@ -180,19 +180,23 @@ if ($name) {
                 <h4>Could not find games with the title <?php echo $name ?></h4>
                 <?php } else {
                 for ($i = 0; $i < count($bggSearchedBoardGames); $i++) {
-
+                    $bggURL = $bggObjectBoardGames[$i]['image'] ?? '';
+                    $bggName = $bggSearchedBoardGames[$i]['name'] ?? '';
+                    $bggYearPublished = $bggSearchedBoardGames[$i]['yearpublished'] ?? '';
+                    $bggMinPlayers = $bggObjectBoardGames[$i]['minplayers'] ?? 0;
+                    $bggMaxPlayers = $bggObjectBoardGames[$i]['maxplayers'] ?? '';
                 ?>
                     <div class="mb-2 border border-1 border-dark">
 
                         <div class="row mb-1 mt-1 ms-1">
                             <div class="col-md-4">
-                                <img src="<?php echo $bggObjectBoardGames[$i]['thumbnail'] ?>" class="update-image">
+                                <img src="<?php echo $bggURL ?>" class="update-image">
                             </div>
                             <div class="col-md-6">
                                 <p>
-                                    <strong><?php echo $bggSearchedBoardGames[$i]['name'] ?> </strong> </br>
-                                    <?php echo $bggSearchedBoardGames[$i]['yearpublished'] . '</br>';
-                                    echo $bggObjectBoardGames[$i]['minplayers'] . '-' . $bggObjectBoardGames[$i]['maxplayers'] . ' players' . '</br>'; ?>
+                                    <strong><?php echo $bggName ?> </strong> </br>
+                                    <?php echo $bggYearPublished . '</br>';
+                                    echo $bggMinPlayers . '-' . $bggMaxPlayers . ' players' . '</br>'; ?>
                                 </p>
                             </div>
                             <div class="col-md-1">
@@ -202,9 +206,10 @@ if ($name) {
                                     <input type="hidden" name="maxPlayers" value="<?php echo $bggObjectBoardGames[$i]['maxplayers'] ?>">
                                     <input type="hidden" name="minTime" value="<?php echo $bggObjectBoardGames[$i]['minplaytime'] ?>">
                                     <input type="hidden" name="maxTime" value="<?php echo $bggObjectBoardGames[$i]['maxplaytime'] ?>">
-                                    <input type="hidden" name="imageURL" value="<?php echo $bggObjectBoardGames[$i]['thumbnail'] ?>">
+                                    <input type="hidden" name="imageURL" value="<?php echo $bggURL ?>">
                                     <input type="hidden" name="description" value="<?php echo strip_tags($bggObjectBoardGames[$i]['description'],'<br>') ?>">
                                     <input type="hidden" name="frombggadd" value="true">
+                                    <input type="hidden" name="objectid" value="<?php echo $objectidArray[$i] ?>">
                                     <button type="submit" class="btn btn-lg btn-success mt-1">Select</button>
                                 </form>
                             </div>

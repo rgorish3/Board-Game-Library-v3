@@ -20,6 +20,7 @@ $description ='';
 $redundant = '';
 $library = '';
 $played = '';
+$objectid = null;
 $url = $_POST['imageURL'] ?? '';
 $frombggadd = $_POST['frombggadd'] ?? null;
 
@@ -37,6 +38,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $minTime = $_POST['minTime'];
         $maxTime = $_POST['maxTime'];
         $description = str_replace("<br/>","\n",$_POST['description']);
+        $objectid = $_POST['objectid'];
+
+
 
         if($minTime === $maxTime){
             if($minTime<=10){
@@ -78,9 +82,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         if(empty($errors)){
 
             $statement = $pdo->prepare("INSERT INTO boardGames (name, baseOrExpansion, minimumPlayers, maximumPlayers, 
-                minimumTime, maximumTime, location, owner, description, isRedundant, library, hasPlayed, imageURL, createDate)
+                minimumTime, maximumTime, location, owner, description, isRedundant, library, hasPlayed, imageURL, createDate, bggObjectID)
                 VALUES(:name, :baseOrExp, :minPlayers, :maxPlayers, :minTime, :maxTime, :location, :owner, :description,
-                :redundant, :library, :played, :imageURL, :date)");
+                :redundant, :library, :played, :imageURL, :date, :objectid)");
 
             $statement -> bindValue(':name',$name);
             $statement -> bindValue(':baseOrExp',$baseOrExp);
@@ -96,6 +100,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             $statement -> bindValue(':played',$played);
             $statement -> bindValue('imageURL',$imagePath);
             $statement -> bindValue(':date',date('Y-m-d H:i:s'));
+            $statement -> bindValue(':objectid',$objectid);
 
 
             $statement->execute();
