@@ -14,6 +14,7 @@ $description = $_POST['description'];
 $redundant = $_POST['redundant'] ?? '';
 $library = $_POST['library'];
 $played = $_POST['played'] ?? '';
+$objectid = $_POST['objectid'] ?? null;
 $image_path =  '';
 
 

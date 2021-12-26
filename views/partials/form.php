@@ -192,6 +192,7 @@
         </div>
         
         <input type="hidden" name="imageURL" value="<?php echo $url ?>">
+        <input type="hidden" name="objectid" value="<?php echo $objectid ?>">
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 

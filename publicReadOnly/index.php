@@ -50,14 +50,9 @@ require_once('../search.php');
                         <th scope="row"><?php echo $i+1; ?></th>
 
                         <td>  
-                            <?php if(substr($boardgame['imageURL'],0,7) === 'images/'){?>
-
-                                <img src="<?php echo '../public/'.$boardgame['imageURL']; ?>" class="thumb-image">
-                                <?php echo '../public/'.$boardgame['imageURL']; ?>
-                            <?php }
-                            else{?>
-                                <img src="<?php echo $boardgame['imageURL']; ?>" class="thumb-image">
-                            <?php } ?>
+                            
+                            <img src="<?php echo $boardgame['imageURL']; ?>" class="thumb-image">       <!--Works with Symbolic Link to images file in public-->
+                            
 
                         </td>
 

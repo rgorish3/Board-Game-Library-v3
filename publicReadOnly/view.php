@@ -27,7 +27,7 @@
         <h1><?php echo $boardgame['name'] ?></h1>
 
         <?php if ($boardgame['imageURL']){?>
-            <img src="<?php echo $boardgame['imageURL']?>" class="update-image">
+            <img src="<?php echo $boardgame['imageURL']?>" class="update-image">    <!--Works with Symbolic Link to images file in public-->
 
         <?php } ?>
 
