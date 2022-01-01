@@ -6,7 +6,6 @@ require_once('../search.php');
 ?>
 
 
-
 <?php include_once("../views/partials/header.php");?>
 
 
